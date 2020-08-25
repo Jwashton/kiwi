@@ -1,25 +1,30 @@
 defmodule KeyValueStore do
+  use GenServer
+
   def start() do
-    ServerProcess.start(KeyValueStore)
+    GenServer.start(KeyValueStore, nil)
   end
 
   def put(pid, key, value) do
-    ServerProcess.cast(pid, {:put, key, value})
+    GenServer.cast(pid, {:put, key, value})
   end
 
   def get(pid, key) do
-    ServerProcess.call(pid, {:get, key})
+    GenServer.call(pid, {:get, key})
   end
 
-  def init() do
-    %{}
+  @impl GenServer
+  def init(_) do
+    {:ok, %{}}
   end
 
+  @impl GenServer
   def handle_cast({:put, key, value}, state) do
-    Map.put(state, key, value)
+    {:noreply, Map.put(state, key, value)}
   end
 
-  def handle_call({:get, key}, state) do
-    {Map.get(state, key), state}
+  @impl GenServer
+  def handle_call({:get, key}, _, state) do
+    {:reply, Map.get(state, key), state}
   end
 end

@@ -2,7 +2,7 @@ defmodule TodoServerTest do
   use ExUnit.Case, async: true
 
   setup do
-    server = TodoServer.start()
+    {:ok, server} = TodoServer.start()
 
     TodoServer.add_entry(server, %{date: ~D[2018-12-19], title: "Dentist"})
     TodoServer.add_entry(server, %{date: ~D[2018-12-20], title: "Shopping"})
